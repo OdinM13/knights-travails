@@ -1,12 +1,13 @@
 class ChessBoard {
   constructor (boardSize) {
     this.board = this.generateNewBoard(boardSize);
+    this.boardSize = boardSize;
   }
 
   generateNewBoard(boardSize) {
     let board = [];
     for (let i = 0; i < boardSize; i++) {
-      let row = new Array(boardSize).fill(0);
+      let row = new Array(boardSize).fill(-1);
       board.push(row);
     }
     return board;
@@ -16,6 +17,39 @@ class ChessBoard {
     // takes a starting position e.g. [3,3] and a end position e.g. [0,0] and finds the shortest path to reach it.
     // e.g. [[3,3],[2,1],[0,0]] 
     // function to calculate nextPossibleMoves(startingPosition), that returns an adjacency list
+    // Keep track of cells already visited
+    // Check if one of the nextPossibleMoves is endPosition
+    let bfsQueue = [];
+    bfsQueue.push(startingPosition);
+    this.board[startingPosition[0]][startingPosition[1]] = 0; 
+
+    while (bfsQueue.length !== 0){
+      const element = bfsQueue.shift();
+      // Initialize current distance. TBD
+      
+      for (let i = 0; i < 8; i++) {
+        const nextPosition = [[element[0] + ][element[1] + ]];
+      }
+    }
+  }
+
+  nextPossibleMoves(startingPosition) {
+    // (2,1), (2,-1), (1,-2), (-1,-2), (-2,-1), (-2,1), (-1,2), (1,2)
+    // const rowDelta = [2,2,1,-1,-2,-2,-1,1];
+    // const colDelta = [1,-1,-2,-2,-1,1,2,2];
+    // startingPosition[0] + rowDelta[i]
+    // startingPosition[1] + colDelta[i]
+    // only return if each value < 7 && > 0
+  }
+
+  isValidPosition(position) {
+    const xPosition = position[0];
+    const yPosition = position[1];
+    if ((xPosition >= 0 && xPosition <= (this.boardSize - 1)) && (yPosition >= 0 && yPosition <= (this.boardSize - 1))) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
 
@@ -28,4 +62,7 @@ class Square {
 }
 
 const test = new ChessBoard(8);
+console.log(test.board);
+console.log(test.isValidPosition([-1,0]));
+console.log(test.knightMoves([0,0],[3,4]));
 console.log(test.board);
