@@ -26,20 +26,35 @@ class ChessBoard {
     while (bfsQueue.length !== 0){
       const element = bfsQueue.shift();
       // Initialize current distance. TBD
+      const nextPossibleMoves = nextPossibleMoves(element);
       
       for (let i = 0; i < 8; i++) {
-        const nextPosition = [[element[0] + ][element[1] + ]];
+        const nextPosition = [[element[0] + nextPossibleMoves[i][0]],[element[1] + nextPossibleMoves[i][1]]];
+
+        if (isValidPosition(nextPosition) && this.board[nextPosition[0]][nextPosition[1]] === -1) {
+          if (nextPosition === endPoistion) {
+            // TBD: Should return the distance, not true
+            return true;
+          }
+
+          // TBD mark position as visited
+          bfsQueue.push(nextPosition);
+        }
       }
     }
+    return false;
   }
 
   nextPossibleMoves(startingPosition) {
     // (2,1), (2,-1), (1,-2), (-1,-2), (-2,-1), (-2,1), (-1,2), (1,2)
-    // const rowDelta = [2,2,1,-1,-2,-2,-1,1];
-    // const colDelta = [1,-1,-2,-2,-1,1,2,2];
-    // startingPosition[0] + rowDelta[i]
-    // startingPosition[1] + colDelta[i]
-    // only return if each value < 7 && > 0
+    const rowDelta = [2,2,1,-1,-2,-2,-1,1];
+    const colDelta = [1,-1,-2,-2,-1,1,2,2];
+    let nextPossibleMoves = [];
+
+    for (let i = 0; i < rowDelta.length; i++) {
+      nextPossibleMoves.push([startingPosition[0] + colDelta[i], startingPosition[1] + rowDelta[i]]);
+    }
+    return nextPossibleMoves;
   }
 
   isValidPosition(position) {
@@ -53,16 +68,9 @@ class ChessBoard {
   }
 }
 
-class Square {
-  constructor (coordinates) {
-    this.currentPosition = coordinates; 
-    this.parent = null;
-    this.children = [];
-  }
-}
-
 const test = new ChessBoard(8);
 console.log(test.board);
 console.log(test.isValidPosition([-1,0]));
-console.log(test.knightMoves([0,0],[3,4]));
-console.log(test.board);
+console.log('Next Possible Moves [3,3]: ', test.nextPossibleMoves([3,3]));
+// console.log(test.knightMoves([0,0],[3,4]));
+// console.log(test.board);
