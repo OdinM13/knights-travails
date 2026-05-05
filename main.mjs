@@ -16,34 +16,31 @@ class ChessBoard {
   knightMoves(startingPosition, endPosition) {
     // takes a starting position e.g. [3,3] and a end position e.g. [0,0] and finds the shortest path to reach it.
     // e.g. [[3,3],[2,1],[0,0]] 
-    // function to calculate nextPossibleMoves(startingPosition), that returns an adjacency list
-    // Keep track of cells already visited
-    // Check if one of the nextPossibleMoves is endPosition
-    let printQueue = [];
     let bfsQueue = [];
-    bfsQueue.push(startingPosition);
-    printQueue.push(startingPosition);
     this.board[startingPosition[0]][startingPosition[1]] = 0; 
+    bfsQueue.push({position: startingPosition, path: [startingPosition]});
 
     while (bfsQueue.length !== 0){
-      const element = bfsQueue.shift();
-      let currentDis = this.board[element[0]][element[1]];
-      const nextPossibleMoves = this.nextPossibleMoves(element);
+      const currentElement = bfsQueue.shift();
+      const currentPosition = currentElement.position;
+      const currentPath = currentElement.path;
+      const currentDis = this.board[currentPosition[0]][currentPosition[1]];
+      const nextPossibleMoves = this.nextPossibleMoves(currentPosition);
       
+      // 8 for eight possible knight moves
       for (let i = 0; i < 8; i++) {
-        // const nextPosition = [element[0] + nextPossibleMoves[i][0],element[1] + nextPossibleMoves[i][1]];
         const nextPosition = [nextPossibleMoves[i][0],nextPossibleMoves[i][1]];
-        console.log('Next Position: ' + nextPosition);
 
         if (this.isValidPosition(nextPosition) && this.board[nextPosition[0]][nextPosition[1]] === -1) {
           if (nextPosition[0] === endPosition[0] && nextPosition[1] === endPosition[1]) {
-            return currentDis + 1;
+            this.printSuccessMessage((currentDis + 1), [...currentPath, nextPosition]);
+            return;
           }
 
-          // this.board[nextPosition[0]][nextPosition[1]] = 0; 
           this.board[nextPosition[0]][nextPosition[1]] = currentDis + 1; 
-          bfsQueue.push(nextPosition);
-          printQueue.push(nextPosition);
+          bfsQueue.push({
+            position: nextPosition, 
+            path: [...currentPath, nextPosition]});
         }
       }
     }
@@ -71,11 +68,20 @@ class ChessBoard {
       return false;
     }
   }
+
+  printSuccessMessage(count, path) {
+    console.log(`=> You made it in ${count} moves! Here\'s your path:`);
+    for (let i = 0; i < path.length; i++) {
+      console.log(path[i]);
+    }
+
+  }
 }
 
 const test = new ChessBoard(8);
-console.log(test.board);
-console.log(test.isValidPosition([-1,0]));
-console.log('Next Possible Moves [3,3]: ', test.nextPossibleMoves([3,3]));
-console.log(test.knightMoves([0,0],[3,3]));
-console.log(test.board);
+// console.log(test.board);
+// console.log(test.isValidPosition([-1,0]));
+// console.log('Next Possible Moves [3,3]: ', test.nextPossibleMoves([3,3]));
+// test.knightMoves([0,0],[3,3]);
+test.knightMoves([0,0],[7,7]);
+// console.log(test.board);
